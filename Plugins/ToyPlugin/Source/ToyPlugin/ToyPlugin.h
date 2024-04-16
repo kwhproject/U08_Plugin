@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -9,7 +7,12 @@ class FToyPluginModule : public IModuleInterface
 {
 public:
 
-	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
+
+private:
+	void AddToolBar(class FToolBarBuilder& InBuilder);
+
+private:
+	TSharedPtr<FExtender> Extender;
 };
