@@ -18,9 +18,12 @@ public:
 	virtual void RegisterCommands() override;
 
 private:
-	void OnClicked();
+	void OnClicked_LoadMesh();
+	void OnClicked_OpenViewer();
 
 public:
 	TSharedPtr<FUICommandInfo> LoadMeshID;
-	TSharedPtr<FUICommandList> LoadMeshCommand;
+	TSharedPtr<FUICommandInfo> OpenViewerID;
+
+	TSharedPtr<FUICommandList> Command;
 };
