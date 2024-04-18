@@ -3,7 +3,9 @@
 #include "GameplayDebugger.h"
 #include "Toolbar/ButtonCommand.h"
 #include "Toolbar/IconStyle.h"
+#include "Actors/CMeshActor.h"
 #include "DebuggerCategory/DebuggerCategory.h"
+#include "DetailPanel/StaticMesh_DetailPanel.h"
 
 #define LOCTEXT_NAMESPACE "FToyPluginModule"
 
@@ -35,6 +37,16 @@ void FToyPluginModule::StartupModule()
 		IGameplayDebugger& gameplayDebugger = IGameplayDebugger::Get();
 		gameplayDebugger.Get().RegisterCategory("AwesomeCategory", makeCategoryInstanceDelegate, EGameplayDebuggerCategoryState::EnabledInGameAndSimulate, 5);
 		gameplayDebugger.NotifyCategoriesChanged();
+	}
+
+	// DetailPanel
+	{
+		FPropertyEditorModule& propertyEditor = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+		propertyEditor.RegisterCustomClassLayout
+		(
+			ACMeshActor::StaticClass()->GetFName(),
+			FOnGetDetailCustomizationInstance::CreateStatic(&FStaticMesh_DetailPanel::MakeInstance)
+		);
 	}
 
 

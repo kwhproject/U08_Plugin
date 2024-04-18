@@ -88,7 +88,6 @@ void FDebuggerCategory::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCa
 	CanvasContext.Printf(FColor::White, L"Name : %s", *DebuggerActorData.Name);
 	CanvasContext.Printf(FColor::White, L"Location : %s", *DebuggerActorData.Location.ToString());
 	CanvasContext.Printf(FColor::White, L"Forward : %s", *DebuggerActorData.Forward.ToString());
-
 }
 
 TSharedRef<FGameplayDebuggerCategory> FDebuggerCategory::MakeInstance()
