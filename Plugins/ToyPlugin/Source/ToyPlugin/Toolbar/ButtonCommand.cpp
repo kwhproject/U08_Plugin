@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ButtonCommand.h"
+#include "DesktopPlatformModule.h"
+#include "Interfaces/IMainFrameModule.h"
+#include "Serialization/BufferArchive.h"
+#include "DetailPanel/StaticMesh_DetailPanel.h"
 
 FButtonCommand::FButtonCommand()
 	: TCommands("ButtonCommand", FText::FromString("Button Commands"), NAME_None, FEditorStyle::GetStyleSetName())
@@ -29,6 +30,53 @@ void FButtonCommand::RegisterCommands()
 void FButtonCommand::OnClicked_LoadMesh()
 {
 	UE_LOG(LogTemp, Error, TEXT("Load Mesh Button is Clicked"));
+
+	FString path;
+
+	IMainFrameModule& mainFrame = FModuleManager::Get().LoadModuleChecked<IMainFrameModule>("MainFrame");
+	void* hwnd = mainFrame.GetParentWindow()->GetNativeWindow()->GetOSWindowHandle();
+	IDesktopPlatform* platform = FDesktopPlatformModule::Get();
+
+	TArray<FString> fileNames;
+	platform->OpenFileDialog(hwnd, "Load Mesh Data", path, "", "Mesh Binary File(*.bin)|*.bin", EFileDialogFlags::None, fileNames);
+	if (fileNames.Num() < 1) return;
+
+	FBufferArchive buffer;
+	FFileHelper::LoadFileToArray(buffer, *fileNames[0]);
+	FMemoryReader reader = FMemoryReader(buffer, true);
+	buffer.Seek(0);
+
+	FBinaryData data;
+	reader << data;
+	reader.FlushCache();
+	reader.Close();
+
+	GLog->Logf(TEXT("Vertex Count : %d"), data.Positions.Num());
+	GLog->Logf(TEXT("Index Count : %d"), data.Indices.Num());
+
+
+#ifdef COPIED_CSV
+	FString text;
+	for (int32 i = 0; i < data.Positions.Num(); i++)
+	{
+		text.Append(data.Positions[i].ToString() + ",");
+		text.Append(data.Normals[i].ToString() + ",");
+		text.Append(data.UVs[i].ToString() + ",");
+		text.Append(data.Colors[i].ToString() + "\n");
+	}
+
+	FString textFileName = FPaths::GetBaseFilename(fileNames[0], false);
+	FString textSaveName = textFileName + "_Copied.csv";
+
+	FFileHelper::SaveStringToFile(text, *textSaveName);
+
+	FString str = "";
+	str.Append(FPaths::GetCleanFilename(textSaveName));
+	str.Append(" CSV File Saved");
+	GLog->Log(str);
+#endif
+
+
 }
 
 void FButtonCommand::OnClicked_OpenViewer()

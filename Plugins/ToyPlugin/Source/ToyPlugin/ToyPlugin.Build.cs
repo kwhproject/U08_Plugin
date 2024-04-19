@@ -28,6 +28,8 @@ public class ToyPlugin : ModuleRules
 				"EditorStyle",
 				"Projects",
 				"GameplayDebugger",
+				"DesktopPlatform",
+				"MainFrame",
 				"Toy"
 			});
 		

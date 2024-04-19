@@ -3,6 +3,27 @@
 #include "CoreMinimal.h"
 #include "IDetailCustomization.h"
 
+struct FBinaryData
+{
+	TArray<FVector> Positions;
+	TArray<FVector> Normals;
+	TArray<FColor> Colors;
+	TArray<FVector2D> UVs;
+	TArray<int32> Indices;
+
+	friend FArchive& operator<<(FArchive& InArchive, FBinaryData& InData)
+	{
+		return InArchive
+			<< InData.Positions
+			<< InData.Normals
+			<< InData.UVs
+			<< InData.Colors
+			<< InData.Indices;
+	}
+};
+
+
+
 class TOYPLUGIN_API FStaticMesh_DetailPanel : public IDetailCustomization
 {
 public:
