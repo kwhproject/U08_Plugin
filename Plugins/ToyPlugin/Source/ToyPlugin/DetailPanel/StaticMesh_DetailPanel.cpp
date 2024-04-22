@@ -6,6 +6,7 @@
 #include "Interfaces/IMainFrameModule.h"
 #include "Serialization/BufferArchive.h"
 #include "Actors/CMeshActor.h"
+#include "Misc/FileHelper.h"
 
 TSharedRef<IDetailCustomization> FStaticMesh_DetailPanel::MakeInstance()
 {

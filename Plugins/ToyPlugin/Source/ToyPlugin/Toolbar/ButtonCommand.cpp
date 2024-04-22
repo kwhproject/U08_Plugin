@@ -3,6 +3,11 @@
 #include "Interfaces/IMainFrameModule.h"
 #include "Serialization/BufferArchive.h"
 #include "DetailPanel/StaticMesh_DetailPanel.h"
+#include "LevelEditorViewport.h"
+#include "Actors/CMeshActor_Copied.h"
+#include "Misc/FileHelper.h"
+#include "AssetViewer/AssetViewer.h"
+#include "Actors/CAssetObject.h"
 
 FButtonCommand::FButtonCommand()
 	: TCommands("ButtonCommand", FText::FromString("Button Commands"), NAME_None, FEditorStyle::GetStyleSetName())
@@ -76,10 +81,48 @@ void FButtonCommand::OnClicked_LoadMesh()
 	GLog->Log(str);
 #endif
 
+	// Spawn Actor
+	FLevelEditorViewportClient* client = (FLevelEditorViewportClient*)GEditor->GetActiveViewport()->GetClient();
+
+	UWorld* world = GEditor->GetEditorWorldContext().World();
+
+	FVector start = client->GetViewLocation();
+	FVector end = start + client->GetViewRotation().RotateVector(FVector(100000, 0, 0));
+
+	FHitResult hitResult;
+	world->LineTraceSingleByChannel(hitResult, start, end, ECC_Visibility);
+	if (hitResult.bBlockingHit == false) return;
+
+	FTransform transform;
+
+	transform.SetLocation(hitResult.ImpactPoint);
+
+	FVector direction = (end - start).GetSafeNormal();
+	FRotator rotation = FRotator(0, direction.Rotation().Yaw, 0);
+	transform.SetRotation(FQuat(rotation));
+
+	ACMeshActor_Copied* actor = world->SpawnActorDeferred<ACMeshActor_Copied>
+		(
+			ACMeshActor_Copied::StaticClass(),
+			transform,
+			nullptr,
+			nullptr,
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn
+		);
+
+	actor->SetPositions(data.Positions);
+	actor->SetIndices(data.Indices);
+	actor->SetNormals(data.Normals);
+	actor->SetUVs(data.UVs);
+	actor->SetColors(data.Colors);
+
+	actor->FinishSpawning(transform);
 
 }
 
 void FButtonCommand::OnClicked_OpenViewer()
 {
 	UE_LOG(LogTemp, Error, TEXT("Open Viewer Button is Clicked"));
+
+	FAssetViewer::OpenWindow(NewObject<UCAssetObject>());
 }
