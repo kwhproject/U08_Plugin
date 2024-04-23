@@ -5,4 +5,7 @@ FAssetViewer_Viewport_Client::FAssetViewer_Viewport_Client(FPreviewScene* InScen
 	: FEditorViewportClient(nullptr, InScene, StaticCastSharedRef<SAssetViewer_Viewport>(InViewport))
 {
 	SetViewMode(VMI_Lit);
+
+	SetViewRotation(FRotator(-40, -90, 0));
+	SetViewLocationForOrbiting(FVector(0, 0, 75), 1000.f);
 }

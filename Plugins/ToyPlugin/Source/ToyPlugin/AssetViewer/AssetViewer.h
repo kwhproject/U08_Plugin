@@ -23,7 +23,13 @@ public:
 
 private:
 	TSharedRef<SDockTab> Spawn_ViewportTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_PreviewSceneSettingsTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_DetailsViweTab(const FSpawnTabArgs& inArgs);
 
 private:
 	static TSharedPtr<FAssetViewer> Instance;
+
+	TSharedPtr<class SAssetViewer_Viewport> Viewport;
+	TSharedPtr<class SWidget> PreviewSceneSettings;
+	TSharedPtr<class IDetailsView> DetailsView;
 };
