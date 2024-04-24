@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ToyCharacter.h"
+#include "Global.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -46,6 +47,14 @@ AToyCharacter::AToyCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	// Get DataAsset
+	UCDataAsset* dataAsset;
+	CHelpers::GetAsset<UCDataAsset>(&dataAsset, "CDataAsset'/Game/Blueprints/Da_2.Da_2'");
+	CLog::Log("EquimentClass : " + dataAsset->GetEquipmentClass()->GetName());
+	CLog::Log("EquimentMontage : " + dataAsset->GetEquipmentMontage()->GetName());
+	CLog::Log("PlayRate : " + FString::SanitizeFloat(dataAsset->GetPlayRate()));
+	CLog::Log("SkeletalMesh : " + dataAsset->GetSkeletalMesh()->GetName());
 }
 
 //////////////////////////////////////////////////////////////////////////

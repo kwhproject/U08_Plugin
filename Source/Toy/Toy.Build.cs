@@ -16,7 +16,8 @@ public class Toy : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"HeadMountedDisplay",
-			"ProceduralMeshComponent"
+			"ProceduralMeshComponent",
+			"ToyPlugin"
 		});
 	}
 }
